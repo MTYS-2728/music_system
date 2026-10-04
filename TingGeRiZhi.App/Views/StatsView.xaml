@@ -1,0 +1,311 @@
+<UserControl x:Class="TingGeRiZhi.App.Views.StatsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:TingGeRiZhi.App.ViewModels">
+    <UserControl.Resources>
+        <!-- 纵向柱子：无数据用淡色，有数据用中色，峰值用主色。 -->
+        <Style x:Key="VBar" TargetType="Rectangle">
+            <Setter Property="Fill" Value="{DynamicResource B.ChartBarSoft}" />
+            <Setter Property="RadiusX" Value="3" />
+            <Setter Property="RadiusY" Value="3" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="ToolTip" Value="{Binding Count}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding HasValue}" Value="True">
+                    <Setter Property="Fill" Value="{DynamicResource B.ChartBar}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Highlight}" Value="True">
+                    <Setter Property="Fill" Value="{DynamicResource B.Accent}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,0,6,0">
+        <StackPanel>
+
+            <Grid Margin="0,0,0,14">
+                <StackPanel>
+                    <TextBlock Text="数据统计" Style="{StaticResource T.Title}" />
+                    <TextBlock x:Name="SubtitleText" Style="{StaticResource T.Muted}" Margin="0,5,0,0" />
+                </StackPanel>
+                <Button Content="刷新统计" HorizontalAlignment="Right" VerticalAlignment="Center" Click="Refresh_Click" />
+            </Grid>
+
+            <!-- KPI -->
+            <ItemsControl x:Name="KpiList">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="1" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:KpiCard}">
+                        <Border Style="{StaticResource Card}" Padding="15,13" Margin="0,0,10,0">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="26" Height="26" CornerRadius="8" Background="{Binding AccentSoft}">
+                                        <Path Data="{Binding Glyph}" Stroke="{Binding Accent}" StrokeThickness="1.6"
+                                              StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                              Width="14" Height="14" Stretch="Uniform"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <TextBlock Text="{Binding Title}" Style="{StaticResource T.Label}" Margin="8,0,0,0"
+                                               VerticalAlignment="Center" />
+                                </StackPanel>
+                                <TextBlock Text="{Binding Value}" FontSize="23" FontWeight="Bold" Margin="0,9,0,0"
+                                           TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="{Binding Caption}" Style="{StaticResource T.Faint}" Margin="0,3,0,0"
+                                           TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- 趋势 -->
+            <Border Style="{StaticResource Card}" Margin="0,14,0,0" Padding="20,16">
+                <StackPanel>
+                    <Grid>
+                        <TextBlock Text="近 30 天播放趋势" Style="{StaticResource T.Section}" />
+                        <TextBlock x:Name="TrendPeakText" Style="{StaticResource T.Faint}" HorizontalAlignment="Right"
+                                   VerticalAlignment="Center" />
+                    </Grid>
+                    <ItemsControl x:Name="TrendList" Height="128" Margin="0,16,0,0">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Rows="1" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:BarItem}">
+                                <Grid Margin="1.5,0">
+                                    <Rectangle Style="{StaticResource VBar}" Height="{Binding Height}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <ItemsControl x:Name="TrendLabels" Margin="0,6,0,0">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Rows="1" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:BarItem}">
+                                <TextBlock Text="{Binding Label}" FontSize="10" Foreground="{DynamicResource B.TextFaint}"
+                                           HorizontalAlignment="Center" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- 时段 / 星期 -->
+            <Grid Margin="0,14,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Style="{StaticResource Card}" Padding="20,16" Margin="0,0,7,0">
+                    <StackPanel>
+                        <TextBlock Text="收听时段分布" Style="{StaticResource T.Section}" />
+                        <TextBlock x:Name="HourPeakText" Style="{StaticResource T.Faint}" Margin="0,4,0,0" />
+                        <ItemsControl x:Name="HourList" Height="110" Margin="0,16,0,0">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Rows="1" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type vm:BarItem}">
+                                    <Grid Margin="1.5,0">
+                                        <Rectangle Style="{StaticResource VBar}" Height="{Binding Height}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <ItemsControl x:Name="HourLabels" Margin="0,6,0,0">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Rows="1" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type vm:BarItem}">
+                                    <TextBlock Text="{Binding Label}" FontSize="9.5" Foreground="{DynamicResource B.TextFaint}"
+                                               HorizontalAlignment="Center" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1" Style="{StaticResource Card}" Padding="20,16" Margin="7,0,0,0">
+                    <StackPanel>
+                        <TextBlock Text="星期分布" Style="{StaticResource T.Section}" />
+                        <TextBlock x:Name="WeekdayPeakText" Style="{StaticResource T.Faint}" Margin="0,4,0,0" />
+                        <ItemsControl x:Name="WeekdayList" Height="110" Margin="0,16,0,0">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Rows="1" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type vm:BarItem}">
+                                    <Grid Margin="4,0">
+                                        <Rectangle Style="{StaticResource VBar}" Height="{Binding Height}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <ItemsControl x:Name="WeekdayLabels" Margin="0,6,0,0">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Rows="1" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type vm:BarItem}">
+                                    <TextBlock Text="{Binding Label}" FontSize="10.5" Foreground="{DynamicResource B.TextFaint}"
+                                               HorizontalAlignment="Center" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Top 歌曲 / 歌手 -->
+            <Grid Margin="0,14,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Style="{StaticResource Card}" Padding="20,16" Margin="0,0,7,0">
+                    <StackPanel>
+                        <TextBlock Text="最常播放的歌曲" Style="{StaticResource T.Section}" />
+                        <ItemsControl x:Name="TopSongList" Margin="0,12,0,0">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type vm:BarItem}">
+                                    <Grid Margin="0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="26" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Rank}" Style="{StaticResource T.Faint}" VerticalAlignment="Center" />
+                                        <Grid Grid.Column="1">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <TextBlock Text="{Binding Label}" FontSize="12.5" TextTrimming="CharacterEllipsis" />
+                                            <TextBlock Grid.Row="1" Text="{Binding Detail}" Style="{StaticResource T.Faint}"
+                                                       TextTrimming="CharacterEllipsis" Margin="0,1,0,0" />
+                                            <Grid Grid.Row="0" Grid.RowSpan="2" VerticalAlignment="Bottom" Height="3" Margin="0,0,0,0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="{Binding StarLength}" />
+                                                    <ColumnDefinition Width="{Binding RestLength}" />
+                                                </Grid.ColumnDefinitions>
+                                                <Rectangle Grid.Column="0" RadiusX="1.5" RadiusY="1.5" Fill="{DynamicResource B.ChartBar}" />
+                                            </Grid>
+                                        </Grid>
+                                        <TextBlock Grid.Column="2" Text="{Binding Count}" FontWeight="SemiBold" FontSize="12.5"
+                                                   Margin="10,0,0,0" VerticalAlignment="Center" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1" Style="{StaticResource Card}" Padding="20,16" Margin="7,0,0,0">
+                    <StackPanel>
+                        <TextBlock Text="最常听的歌手" Style="{StaticResource T.Section}" />
+                        <ItemsControl x:Name="TopArtistList" Margin="0,12,0,0">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type vm:BarItem}">
+                                    <Grid Margin="0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="26" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Rank}" Style="{StaticResource T.Faint}" VerticalAlignment="Center" />
+                                        <Grid Grid.Column="1">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <TextBlock Text="{Binding Label}" FontSize="12.5" TextTrimming="CharacterEllipsis" />
+                                            <TextBlock Grid.Row="1" Text="{Binding Detail}" Style="{StaticResource T.Faint}"
+                                                       TextTrimming="CharacterEllipsis" Margin="0,1,0,0" />
+                                            <Grid Grid.Row="0" Grid.RowSpan="2" VerticalAlignment="Bottom" Height="3">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="{Binding StarLength}" />
+                                                    <ColumnDefinition Width="{Binding RestLength}" />
+                                                </Grid.ColumnDefinitions>
+                                                <Rectangle Grid.Column="0" RadiusX="1.5" RadiusY="1.5" Fill="{DynamicResource B.Indigo}" />
+                                            </Grid>
+                                        </Grid>
+                                        <TextBlock Grid.Column="2" Text="{Binding Count}" FontWeight="SemiBold" FontSize="12.5"
+                                                   Margin="10,0,0,0" VerticalAlignment="Center" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- 专辑 -->
+            <Border Style="{StaticResource Card}" Margin="0,14,0,0" Padding="20,16">
+                <StackPanel>
+                    <TextBlock Text="最常听的专辑" Style="{StaticResource T.Section}" />
+                    <ItemsControl x:Name="TopAlbumList" Margin="0,12,0,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:BarItem}">
+                                <Grid Margin="0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="26" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Rank}" Style="{StaticResource T.Faint}" VerticalAlignment="Center" />
+                                    <Grid Grid.Column="1">
+                                        <TextBlock Text="{Binding Label}" FontSize="12.5" TextTrimming="CharacterEllipsis" />
+                                        <Grid VerticalAlignment="Bottom" Height="3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{Binding StarLength}" />
+                                                <ColumnDefinition Width="{Binding RestLength}" />
+                                            </Grid.ColumnDefinitions>
+                                            <Rectangle Grid.Column="0" RadiusX="1.5" RadiusY="1.5" Fill="{DynamicResource B.ChartBarSoft}" />
+                                        </Grid>
+                                    </Grid>
+                                    <TextBlock Grid.Column="2" Text="{Binding Count}" FontWeight="SemiBold" FontSize="12.5"
+                                               Margin="10,0,0,0" VerticalAlignment="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- 空状态 -->
+            <Border x:Name="EmptyCard" Style="{StaticResource Card}" Margin="0,14,0,0" Padding="24" Visibility="Collapsed">
+                <StackPanel HorizontalAlignment="Center" Margin="0,10,0,14">
+                    <Border Width="64" Height="64" CornerRadius="20" Background="{DynamicResource B.SurfaceAlt}" HorizontalAlignment="Center">
+                        <Path Data="{StaticResource G.Chart}" Stroke="{DynamicResource B.TextFaint}" StrokeThickness="1.6"
+                              StrokeStartLineCap="Round" StrokeEndLineCap="Round" Width="28" Height="28" Stretch="Uniform"
+                              HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <TextBlock Text="还没有可统计的数据" Style="{StaticResource T.Section}" HorizontalAlignment="Center" Margin="0,14,0,0" />
+                    <TextBlock Text="记录几首歌之后再回来看看你的收听习惯。" Style="{StaticResource T.Faint}"
+                               HorizontalAlignment="Center" Margin="0,7,0,0" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

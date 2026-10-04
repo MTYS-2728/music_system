@@ -1,0 +1,79 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!-- 聆迹 · 深色主题令牌。所有键名必须与 Light.xaml 完全一致。 -->
+
+    <FontFamily x:Key="AppFont">Microsoft YaHei UI, Segoe UI, Arial</FontFamily>
+    <FontFamily x:Key="MonoFont">Cascadia Mono, Consolas, Microsoft YaHei UI</FontFamily>
+
+    <SolidColorBrush x:Key="B.Window"          Color="#0F1319" />
+    <SolidColorBrush x:Key="B.Sidebar"         Color="#151A22" />
+    <SolidColorBrush x:Key="B.TitleBar"        Color="#151A22" />
+    <SolidColorBrush x:Key="B.Surface"         Color="#1A2029" />
+    <SolidColorBrush x:Key="B.SurfaceAlt"      Color="#1F2632" />
+    <SolidColorBrush x:Key="B.SurfaceHover"    Color="#252E3C" />
+    <SolidColorBrush x:Key="B.SurfaceSunken"   Color="#161C25" />
+
+    <SolidColorBrush x:Key="B.Border"          Color="#2A3341" />
+    <SolidColorBrush x:Key="B.BorderStrong"    Color="#3A4657" />
+    <SolidColorBrush x:Key="B.Divider"         Color="#232C39" />
+
+    <SolidColorBrush x:Key="B.Text"            Color="#E7EDF5" />
+    <SolidColorBrush x:Key="B.TextMuted"       Color="#93A2B7" />
+    <SolidColorBrush x:Key="B.TextFaint"       Color="#6B7A90" />
+    <SolidColorBrush x:Key="B.TextOnAccent"    Color="#08110F" />
+
+    <SolidColorBrush x:Key="B.Accent"          Color="#3DBBA6" />
+    <SolidColorBrush x:Key="B.AccentHover"     Color="#4FCBB5" />
+    <SolidColorBrush x:Key="B.AccentPressed"   Color="#2FA491" />
+    <SolidColorBrush x:Key="B.AccentSoft"      Color="#16302C" />
+    <SolidColorBrush x:Key="B.AccentSoftText"  Color="#63D6C1" />
+    <SolidColorBrush x:Key="B.AccentGlow"      Color="#3DBBA6" />
+
+    <SolidColorBrush x:Key="B.Indigo"          Color="#7C93F0" />
+    <SolidColorBrush x:Key="B.IndigoSoft"      Color="#1D2540" />
+    <SolidColorBrush x:Key="B.Success"         Color="#3FBF83" />
+    <SolidColorBrush x:Key="B.SuccessSoft"     Color="#14301F" />
+    <SolidColorBrush x:Key="B.Warning"         Color="#E5A63A" />
+    <SolidColorBrush x:Key="B.WarningSoft"     Color="#33280F" />
+    <SolidColorBrush x:Key="B.Danger"          Color="#F0736F" />
+    <SolidColorBrush x:Key="B.DangerSoft"      Color="#3A1E20" />
+    <SolidColorBrush x:Key="B.Star"            Color="#F2BC3F" />
+    <SolidColorBrush x:Key="B.StarSoft"        Color="#332913" />
+
+    <LinearGradientBrush x:Key="B.CoverPlaceholder" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#1E3A38" Offset="0" />
+        <GradientStop Color="#1E2B3F" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="B.HeroGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#17302D" Offset="0" />
+        <GradientStop Color="#1A2436" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="B.CoverGlyph" Color="#4E8C84" />
+
+    <SolidColorBrush x:Key="B.ChartBar"        Color="#2E756A" />
+    <SolidColorBrush x:Key="B.ChartBarSoft"    Color="#1C3833" />
+    <SolidColorBrush x:Key="B.ChartGrid"       Color="#232C39" />
+
+    <SolidColorBrush x:Key="B.Hover"           Color="#232C39" />
+    <SolidColorBrush x:Key="B.Pressed"         Color="#2B3646" />
+    <SolidColorBrush x:Key="B.Selected"        Color="#1D3A36" />
+    <SolidColorBrush x:Key="B.SelectedBorder"  Color="#2F6A61" />
+    <SolidColorBrush x:Key="B.Focus"           Color="#3DBBA6" />
+    <SolidColorBrush x:Key="B.ScrollThumb"     Color="#39455A" />
+    <SolidColorBrush x:Key="B.ScrollThumbHover" Color="#4B5A73" />
+
+    <SolidColorBrush x:Key="B.StatusOnline"    Color="#3FBF83" />
+    <SolidColorBrush x:Key="B.StatusIdle"      Color="#6B7A90" />
+    <SolidColorBrush x:Key="B.StatusPaused"    Color="#E5A63A" />
+
+    <sys:Double x:Key="D.CardRadius">14</sys:Double>
+    <CornerRadius x:Key="R.Card">14</CornerRadius>
+    <CornerRadius x:Key="R.Control">9</CornerRadius>
+    <CornerRadius x:Key="R.Pill">999</CornerRadius>
+    <CornerRadius x:Key="R.Small">7</CornerRadius>
+
+    <DropShadowEffect x:Key="E.Card" BlurRadius="20" ShadowDepth="2" Direction="270" Opacity="0.35" Color="#000000" />
+    <DropShadowEffect x:Key="E.Popup" BlurRadius="26" ShadowDepth="4" Direction="270" Opacity="0.5" Color="#000000" />
+</ResourceDictionary>

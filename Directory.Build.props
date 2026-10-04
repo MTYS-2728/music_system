@@ -1,0 +1,16 @@
+<Project>
+
+  <!--
+    本解决方案只在 Windows 上运行。
+    .NET 默认是"RID 无关"构建，会把 SQLite 依赖里 Linux / macOS / MacCatalyst /
+    WebAssembly 等所有平台的本机库都复制进 bin 目录（每个项目约 25 MB，实际用不到）。
+    锁定单个 RID 后只保留 Windows 本机库；AppendRuntimeIdentifierToOutputPath=false
+    保证输出路径不变，启动听歌日志.cmd 和 README 里的路径都不受影响。
+  -->
+  <PropertyGroup>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+
+</Project>

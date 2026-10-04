@@ -1,0 +1,36 @@
+<Window x:Class="TingGeRiZhi.App.Dialogs.SongEditDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="编辑歌曲信息" Width="480" SizeToContent="Height"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner">
+    <Border Margin="16" Background="{DynamicResource B.Surface}" CornerRadius="{DynamicResource R.Card}"
+            BorderBrush="{DynamicResource B.Border}" BorderThickness="1" Effect="{DynamicResource E.Popup}">
+        <StackPanel Margin="22,18,22,20">
+            <Grid MouseLeftButtonDown="Header_MouseDown" Background="Transparent">
+                <TextBlock Text="编辑歌曲信息" Style="{StaticResource T.Section}" />
+                <Button Content="✕" Style="{StaticResource BtnGhost}" HorizontalAlignment="Right"
+                        Padding="6,1" MinHeight="22" FontSize="12" Click="Cancel_Click" />
+            </Grid>
+            <TextBlock Text="修改后会同步更新这首歌的全部播放记录；如果与已有歌曲重名，会自动合并。"
+                       Style="{StaticResource T.Faint}" Margin="0,6,0,0" TextWrapping="Wrap" />
+
+            <TextBlock Text="歌曲名（必填）" Style="{StaticResource T.Label}" Margin="2,16,0,6" />
+            <TextBox x:Name="TitleBox" Tag="歌曲名" />
+
+            <TextBlock Text="歌手" Style="{StaticResource T.Label}" Margin="2,12,0,6" />
+            <TextBox x:Name="ArtistBox" Tag="歌手" />
+
+            <TextBlock Text="专辑" Style="{StaticResource T.Label}" Margin="2,12,0,6" />
+            <TextBox x:Name="AlbumBox" Tag="专辑" />
+
+            <TextBlock x:Name="ErrorText" Foreground="{DynamicResource B.Danger}" FontSize="12.5"
+                       Margin="2,10,0,0" Visibility="Collapsed" TextWrapping="Wrap" />
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,18,0,0">
+                <Button Content="取消" IsCancel="True" Click="Cancel_Click" />
+                <Button Content="保存" Style="{StaticResource BtnPrimary}" IsDefault="True" Click="Save_Click" Margin="8,0,0,0" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</Window>

@@ -1,0 +1,22 @@
+<Application x:Class="TingGeRiZhi.App.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:TingGeRiZhi.App.Converters"
+             ShutdownMode="OnExplicitShutdown">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- 索引 0 必须是主题令牌字典：ThemeManager 会原地替换它。 -->
+                <ResourceDictionary Source="Themes/Light.xaml" />
+                <ResourceDictionary Source="Themes/Controls.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
+            <conv:NotEmptyToVisibilityConverter x:Key="NotEmptyToVis" />
+            <conv:CoverImageConverter x:Key="CoverImage" />
+            <conv:SecondsToTextConverter x:Key="SecondsToText" />
+            <conv:RatioToGridLengthConverter x:Key="RatioToStar" />
+            <conv:DurationSummaryConverter x:Key="DurationSummary" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

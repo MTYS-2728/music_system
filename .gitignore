@@ -1,0 +1,44 @@
+# ============================================================
+#  聆迹 · 听歌日志 —— 版本控制忽略规则
+# ============================================================
+
+# ---------- 构建产物 ----------
+# bin / obj 是 dotnet build 生成的，可由源码重新构建；合计约 60MB
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+
+# ---------- IDE / 编辑器 ----------
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.idea/
+.vscode/
+
+# ---------- 本机 .NET SDK 与 NuGet 包缓存（重要）----------
+# .dotnet-home/ 是本机唯一的 NuGet 包缓存（约 136MB），由 DOTNET_CLI_HOME
+# 与 NUGET_PACKAGES 环境变量指向。它只对本机有效、体积巨大，不该进版本库；
+# 但【删除它会导致本机无法构建】——这里只忽略，不要删。
+.dotnet-home/
+
+# ---------- 本机数据与缓存 ----------
+# 数据库与封面缓存的默认位置是 %LOCALAPPDATA%\TingGeRiZhi\，正常不会出现在
+# 仓库里；下面几条只是防止手动测试时把数据文件误提交进来
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# ---------- 工具生成的图片 ----------
+# IconStudio 输出的图标候选对比图
+tools/IconStudio/out/
+
+# ---------- 其它 ----------
+*.log
+*.tmp
+Thumbs.db
+desktop.ini

@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="TingGeRiZhi.App/TingGeRiZhi.App.csproj" />
+  <Project Path="TingGeRiZhi.Core/TingGeRiZhi.Core.csproj" />
+  <Project Path="TingGeRiZhi.Probe/TingGeRiZhi.Probe.csproj" />
+</Solution>

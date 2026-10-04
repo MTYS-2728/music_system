@@ -1,0 +1,157 @@
+<Window x:Class="TingGeRiZhi.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:TingGeRiZhi.App.Views"
+        xmlns:vm="clr-namespace:TingGeRiZhi.App.ViewModels"
+        Title="聆迹" Height="780" Width="1280" MinHeight="640" MinWidth="1080"
+        WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="CanResize"
+        Background="{DynamicResource B.Window}" Icon="Assets/app.ico"
+        Closing="Window_Closing" StateChanged="Window_StateChanged"
+        SourceInitialized="Window_SourceInitialized" PreviewKeyDown="Window_PreviewKeyDown">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="6" GlassFrameThickness="0"
+                      CornerRadius="0" UseAeroCaptionButtons="False" />
+    </WindowChrome.WindowChrome>
+
+    <Border x:Name="RootFrame" Background="{DynamicResource B.Window}"
+            BorderBrush="{DynamicResource B.BorderStrong}" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- ==================================================== 标题栏 -->
+            <Grid Grid.Row="0" Height="52" Background="{DynamicResource B.TitleBar}"
+                  MouseLeftButtonDown="TitleBar_MouseDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="228" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" Margin="16,0,0,0" VerticalAlignment="Center">
+                    <Image Source="Assets/app.ico" Width="21" Height="21" RenderOptions.BitmapScalingMode="HighQuality" />
+                    <TextBlock Text="聆迹" FontSize="14.5" FontWeight="Bold" Margin="10,0,0,0" VerticalAlignment="Center" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0,0,0">
+                    <TextBlock x:Name="PageTitleText" Text="正在播放" FontSize="13.5" FontWeight="SemiBold"
+                               VerticalAlignment="Center" />
+                    <TextBlock x:Name="PageSubtitleText" Style="{StaticResource T.Faint}" Margin="10,0,0,0"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
+                    <Border x:Name="AutoChip" Style="{StaticResource Chip}" Padding="10,4" Margin="0,0,12,0">
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse x:Name="AutoChipDot" Width="7" Height="7" Fill="{DynamicResource B.StatusOnline}"
+                                     Margin="0,0,7,0" VerticalAlignment="Center" />
+                            <TextBlock x:Name="AutoChipText" Text="自动记录中" FontSize="12" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource B.TextMuted}" />
+                        </StackPanel>
+                    </Border>
+
+                    <Button x:Name="MinButton" Style="{StaticResource BtnTitleBar}" Click="Min_Click" ToolTip="最小化">
+                        <Path Data="{StaticResource G.Min}" Stroke="{DynamicResource B.TextMuted}" StrokeThickness="1.5"
+                              StrokeStartLineCap="Round" Width="14" Height="14" Stretch="Uniform" />
+                    </Button>
+                    <Button x:Name="MaxButton" Style="{StaticResource BtnTitleBar}" Click="Max_Click" ToolTip="最大化">
+                        <Path x:Name="MaxIcon" Data="{StaticResource G.Max}" Stroke="{DynamicResource B.TextMuted}" StrokeThickness="1.5"
+                              StrokeLineJoin="Round" Width="13" Height="13" Stretch="Uniform" />
+                    </Button>
+                    <Button x:Name="CloseButton" Style="{StaticResource BtnClose}" Click="Close_Click" ToolTip="关闭到托盘">
+                        <Path Data="{StaticResource G.Close}" Stroke="{DynamicResource B.TextMuted}" StrokeThickness="1.5"
+                              StrokeStartLineCap="Round" Width="13" Height="13" Stretch="Uniform" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+            <!-- ==================================================== 主体 -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="228" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- 侧边栏 -->
+                <Border Grid.Column="0" Background="{DynamicResource B.Sidebar}"
+                        BorderBrush="{DynamicResource B.Border}" BorderThickness="0,1,1,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <ListBox x:Name="NavList" Grid.Row="0" Style="{StaticResource NavList}"
+                                 Margin="12,14,12,0" SelectionChanged="Nav_SelectionChanged">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate DataType="{x:Type vm:NavItem}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Path x:Name="NavIcon" Data="{Binding Icon}" Stroke="{DynamicResource B.TextMuted}"
+                                              StrokeThickness="1.6" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                              StrokeLineJoin="Round" Width="18" Height="18" Stretch="Uniform"
+                                              VerticalAlignment="Center" />
+                                        <TextBlock x:Name="NavLabel" Grid.Column="1" Text="{Binding Title}"
+                                                   Margin="12,0,0,0" FontSize="13.5" VerticalAlignment="Center" />
+                                    </Grid>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
+                                            <Setter TargetName="NavIcon" Property="Stroke" Value="{DynamicResource B.AccentSoftText}" />
+                                            <Setter TargetName="NavLabel" Property="Foreground" Value="{DynamicResource B.AccentSoftText}" />
+                                            <Setter TargetName="NavLabel" Property="FontWeight" Value="SemiBold" />
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <Border Grid.Row="1" Style="{StaticResource Card}" Margin="12,0,12,14" Padding="14,12">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Ellipse x:Name="SideAutoDot" Width="7" Height="7" Fill="{DynamicResource B.StatusOnline}"
+                                             VerticalAlignment="Center" />
+                                    <TextBlock x:Name="SideAutoText" Text="自动记录中" Margin="7,0,0,0" FontSize="12.5"
+                                               FontWeight="SemiBold" VerticalAlignment="Center" />
+                                </StackPanel>
+                                <TextBlock x:Name="SideAutoDetail" Style="{StaticResource T.Faint}" Margin="0,7,0,0"
+                                           TextWrapping="Wrap" Text="每 5 秒检查一次" />
+                                <Button x:Name="PauseButton" Content="暂停自动记录" Margin="0,11,0,0"
+                                        HorizontalAlignment="Stretch" Click="Pause_Click" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- 页面 -->
+                <Grid Grid.Column="1" Margin="22,18,22,14">
+                    <views:NowPlayingView x:Name="NowPlayingPage" />
+                    <views:RecordsView x:Name="RecordsPage" Visibility="Collapsed" />
+                    <views:StatsView x:Name="StatsPage" Visibility="Collapsed" />
+                    <views:SettingsView x:Name="SettingsPage" Visibility="Collapsed" />
+                </Grid>
+            </Grid>
+
+            <!-- ==================================================== 状态栏 -->
+            <Border Grid.Row="2" Height="34" Background="{DynamicResource B.Surface}"
+                    BorderBrush="{DynamicResource B.Border}" BorderThickness="0,1,0,0">
+                <Grid Margin="16,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Ellipse x:Name="StatusDot" Width="7" Height="7" Fill="{DynamicResource B.StatusIdle}" />
+                        <TextBlock x:Name="StatusText" Text="准备就绪" Margin="8,0,0,0" FontSize="12.5"
+                                   Foreground="{DynamicResource B.TextMuted}" VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis" MaxWidth="760" />
+                    </StackPanel>
+                    <TextBlock x:Name="FooterText" HorizontalAlignment="Right" VerticalAlignment="Center"
+                               FontSize="12" Foreground="{DynamicResource B.TextFaint}"
+                               TextTrimming="CharacterEllipsis" MaxWidth="420" />
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

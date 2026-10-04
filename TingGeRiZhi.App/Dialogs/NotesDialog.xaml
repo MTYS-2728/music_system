@@ -1,0 +1,29 @@
+<Window x:Class="TingGeRiZhi.App.Dialogs.NotesDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="歌曲备注" Width="470" SizeToContent="Height"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner">
+    <Border Margin="16" Background="{DynamicResource B.Surface}" CornerRadius="{DynamicResource R.Card}"
+            BorderBrush="{DynamicResource B.Border}" BorderThickness="1" Effect="{DynamicResource E.Popup}">
+        <StackPanel Margin="22,18,22,20">
+            <Grid MouseLeftButtonDown="Header_MouseDown" Background="Transparent">
+                <TextBlock Text="歌曲备注" Style="{StaticResource T.Section}" />
+                <Button Content="✕" Style="{StaticResource BtnGhost}" HorizontalAlignment="Right"
+                        Padding="6,1" MinHeight="22" FontSize="12" Click="Cancel_Click" />
+            </Grid>
+            <TextBlock x:Name="SongText" Style="{StaticResource T.Faint}" Margin="0,6,0,0" TextTrimming="CharacterEllipsis" />
+
+            <TextBox x:Name="NotesBox" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="130" MaxHeight="260"
+                     VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top" Margin="0,14,0,0"
+                     Tag="写点什么…例如当时的心情、场景或想记住的一句话" />
+
+            <TextBlock x:Name="CounterText" Style="{StaticResource T.Faint}" Margin="2,6,0,0" />
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+                <Button Content="取消" IsCancel="True" Click="Cancel_Click" />
+                <Button Content="保存备注" Style="{StaticResource BtnPrimary}" IsDefault="True" Click="Save_Click" Margin="8,0,0,0" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</Window>
