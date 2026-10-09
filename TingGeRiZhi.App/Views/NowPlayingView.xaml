@@ -41,7 +41,7 @@
 
                         <TextBlock x:Name="TitleText" Text="尚未读取到正在播放的歌曲" FontSize="25" FontWeight="Bold"
                                    TextTrimming="CharacterEllipsis" Margin="0,14,0,0" />
-                        <TextBlock x:Name="ArtistText" Text="打开 QQ 音乐并开始播放，或使用右侧按钮手动记录"
+                        <TextBlock x:Name="ArtistText" Text="在 QQ 音乐或网易云音乐里播放，或使用右侧按钮手动记录"
                                    FontSize="14" Foreground="{DynamicResource B.TextMuted}" Margin="0,7,0,0"
                                    TextTrimming="CharacterEllipsis" />
                         <TextBlock x:Name="AlbumText" Foreground="{DynamicResource B.TextFaint}" FontSize="12.5"

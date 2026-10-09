@@ -168,15 +168,15 @@ public sealed class PlaybackTracker : IDisposable
     // ------------------------------------------------------------------ 内部
 
     /// <summary>
-    /// 按设置挑选要跟踪的媒体会话。开启"只记录 QQ 音乐"时，其它应用的会话一律跳过，
+    /// 按设置挑选要跟踪的媒体会话。开启"只记录音乐软件"时，其它应用的会话一律跳过，
     /// 并返回一条带说明的不可用快照，让界面能告诉用户"为什么没有记录"。
     /// </summary>
     private async Task<MediaSnapshot> ReadSnapshotAsync(CancellationToken cancellationToken)
     {
-        if (!_settings.OnlyRecordQQMusic)
+        if (!_settings.OnlyRecordMusicApps)
             return await _reader.ReadCurrentAsync(cancellationToken).ConfigureAwait(false);
 
-        var matched = await _reader.ReadPreferredAsync(SourceApps.IsQQMusic, cancellationToken).ConfigureAwait(false);
+        var matched = await _reader.ReadPreferredAsync(SourceApps.IsRecordable, cancellationToken).ConfigureAwait(false);
         if (matched is not null) return matched;
 
         var sessions = await _reader.ListSessionsAsync(cancellationToken).ConfigureAwait(false);
@@ -189,7 +189,7 @@ public sealed class PlaybackTracker : IDisposable
         }
 
         return new MediaSnapshot(other.Title, other.Artist, "", PlaybackState.Closed, null, null, other.SourceApp,
-            DateTimeOffset.UtcNow, false, $"「{other.FriendlySource}」正在播放，已按设置跳过（仅记录 QQ 音乐）");
+            DateTimeOffset.UtcNow, false, $"「{other.FriendlySource}」正在播放，已按设置跳过（仅记录 {SourceApps.RecordableNames}）");
     }
 
     private bool UpdateSessionLocked(MediaSnapshot raw)

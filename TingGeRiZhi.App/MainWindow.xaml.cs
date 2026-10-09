@@ -126,8 +126,8 @@ public partial class MainWindow : Window
     }
 
     /// <summary>侧边栏里那句"当前记录规则"的说明。</summary>
-    private static string DescribeAutoRule(AppSettings settings) => settings.OnlyRecordQQMusic
-        ? $"仅记录 QQ 音乐 · 每 {settings.PollSeconds} 秒检查一次"
+    private static string DescribeAutoRule(AppSettings settings) => settings.OnlyRecordMusicApps
+        ? $"仅记录 {SourceApps.RecordableNames} · 每 {settings.PollSeconds} 秒检查一次"
         : $"每 {settings.PollSeconds} 秒检查一次 · 连续 {settings.RecordThresholdSeconds} 秒后记录";
 
     private void ApplySettingsToUi()
@@ -139,8 +139,9 @@ public partial class MainWindow : Window
         var settings = AppServices.Settings;
 
         PauseButton.Content = auto ? "暂停自动记录" : "继续自动记录";
-        SideAutoText.Text = auto ? (settings.OnlyRecordQQMusic ? "仅记录 QQ 音乐" : "自动记录中") : "自动记录已暂停";
-        AutoChipText.Text = auto ? (settings.OnlyRecordQQMusic ? "仅记录 QQ 音乐" : "自动记录中") : "自动记录已暂停";
+        var musicOnly = settings.OnlyRecordMusicApps;
+        SideAutoText.Text = auto ? (musicOnly ? "仅记录音乐软件" : "自动记录中") : "自动记录已暂停";
+        AutoChipText.Text = auto ? (musicOnly ? "仅记录音乐软件" : "自动记录中") : "自动记录已暂停";
 
         var dot = (Brush)FindResource(auto ? "B.StatusOnline" : "B.StatusPaused");
         SideAutoDot.Fill = dot;

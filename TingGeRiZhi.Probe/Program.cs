@@ -7,7 +7,7 @@ using TingGeRiZhi.Core;
 
 var failures = new List<string>();
 
-if (args.Contains("--all")) args = new[] { "--db-smoke", "--stats-smoke", "--io-smoke" };
+if (args.Contains("--all")) args = new[] { "--db-smoke", "--stats-smoke", "--io-smoke", "--source-smoke" };
 
 if (args.Contains("--sessions"))
 {
@@ -16,17 +16,41 @@ if (args.Contains("--sessions"))
     if (sessions.Count == 0) Console.WriteLine("  （没有活动的媒体会话）");
     foreach (var s in sessions)
     {
-        Console.WriteLine($"  {(s.IsCurrent ? "*" : " ")} [{(s.IsQQMusic ? "QQ音乐" : "其它")}] {s.FriendlySource}");
+        Console.WriteLine($"  {(s.IsCurrent ? "*" : " ")} [{(s.IsRecordable ? s.KindLabel : "其它")}] {s.FriendlySource}");
         Console.WriteLine($"      来源标识：{s.SourceApp}");
         Console.WriteLine($"      正在播放：{(string.IsNullOrWhiteSpace(s.Display) ? "(无标题)" : s.Display)}  状态={s.State}");
     }
     Console.WriteLine();
-    var qq = sessions.FirstOrDefault(s => s.IsQQMusic);
-    Console.WriteLine(qq is null
-        ? "  → 未找到 QQ 音乐会话；开启「只记录 QQ 音乐」时不会记录任何内容。"
-        : $"  → 找到 QQ 音乐会话：{(string.IsNullOrWhiteSpace(qq.Display) ? "(无标题)" : qq.Display)}");
+    var music = sessions.FirstOrDefault(s => s.IsRecordable);
+    Console.WriteLine(music is null
+        ? "  → 未找到音乐软件会话；开启「只记录音乐软件」时不会记录任何内容。"
+        : $"  → 找到 {music.KindLabel} 会话：{(string.IsNullOrWhiteSpace(music.Display) ? "(无标题)" : music.Display)}");
     Console.WriteLine();
     if (args.Length == 1) return;
+}
+
+if (args.Contains("--source-smoke"))
+{
+    Console.WriteLine("== 来源识别冒烟 ==");
+
+    // 可记录的播放器：进程名、完整路径、AUMID 三种形式都要认出来。
+    Check(SourceApps.Match("QQMusic.exe")?.Name == "QQ 音乐", "QQMusic.exe 应识别为 QQ 音乐", failures);
+    Check(SourceApps.Match(@"C:\Program Files\Tencent\QQMusic\QQMusic.exe")?.Name == "QQ 音乐",
+        "QQ 音乐的完整路径应被识别", failures);
+    Check(SourceApps.Match("cloudmusic.exe")?.Name == "网易云音乐", "cloudmusic.exe 应识别为网易云音乐", failures);
+    Check(SourceApps.Match(@"C:\MySoftware\网易云音乐\cloudmusic.exe")?.Name == "网易云音乐",
+        "网易云音乐的完整路径应被识别", failures);
+    Check(SourceApps.Match("Netease.CloudMusic_abcdef!App")?.Name == "网易云音乐",
+        "网易云音乐的 AUMID 应被识别", failures);
+    Check(SourceApps.IsRecordable("  CLOUDMUSIC.EXE  "), "识别应忽略大小写与首尾空格", failures);
+
+    // 不该被记录的来源。
+    Check(!SourceApps.IsRecordable("msedge.exe"), "浏览器不应被识别为音乐软件", failures);
+    Check(!SourceApps.IsRecordable("哔哩哔哩.exe"), "B 站客户端不应被识别为音乐软件", failures);
+    Check(!SourceApps.IsRecordable(""), "空来源不应被识别", failures);
+    Check(!SourceApps.IsRecordable(null), "null 来源不应被识别", failures);
+
+    Console.WriteLine($"  可记录的播放器：{SourceApps.RecordableNames}");
 }
 
 if (args.Contains("--db-smoke"))

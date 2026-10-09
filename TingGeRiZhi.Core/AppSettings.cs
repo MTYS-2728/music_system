@@ -30,8 +30,8 @@ public sealed class AppSettings
     /// <summary>自动从 Windows 媒体会话抓取封面。</summary>
     public bool CaptureCoverArt { get; set; } = true;
 
-    /// <summary>只记录来自 QQ 音乐的媒体会话（浏览器、B 站等一律跳过）。</summary>
-    public bool OnlyRecordQQMusic { get; set; } = true;
+    /// <summary>只记录来自音乐软件的媒体会话（浏览器、B 站等一律跳过）。可记录的播放器见 <see cref="SourceApps.Recordable"/>。</summary>
+    public bool OnlyRecordMusicApps { get; set; } = true;
 
     /// <summary>删除前弹确认框。</summary>
     public bool ConfirmBeforeDelete { get; set; } = true;
@@ -64,7 +64,7 @@ public sealed class AppSettings
         StartMinimized = StartMinimized,
         CaptureCoverArt = CaptureCoverArt,
         ConfirmBeforeDelete = ConfirmBeforeDelete,
-        OnlyRecordQQMusic = OnlyRecordQQMusic,
+        OnlyRecordMusicApps = OnlyRecordMusicApps,
         LastDirectory = LastDirectory,
         SortMode = SortMode
     };

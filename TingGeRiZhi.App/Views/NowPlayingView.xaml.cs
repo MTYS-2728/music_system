@@ -125,7 +125,7 @@ public partial class NowPlayingView : UserControl
 
     /// <summary>
     /// 没有可记录的会话时的展示。如果快照带着标题，说明是"正在播放但被规则跳过"的会话
-    /// （例如"只记录 QQ 音乐"时正在放 B 站），这时照常显示曲目并说明不会被记录。
+    /// （例如"只记录音乐软件"时正在放 B 站），这时照常显示曲目并说明不会被记录。
     /// </summary>
     private void RenderUnavailable(MediaSnapshot? snapshot)
     {
@@ -150,7 +150,7 @@ public partial class NowPlayingView : UserControl
             StateText.Text = "已跳过";
             StateDot.Fill = (System.Windows.Media.Brush)FindResource("B.StatusPaused");
             TitleText.Text = snapshot!.Title;
-            ArtistText.Text = string.IsNullOrWhiteSpace(snapshot.Artist) ? "非 QQ 音乐会话" : snapshot.Artist;
+            ArtistText.Text = string.IsNullOrWhiteSpace(snapshot.Artist) ? "不在记录范围内" : snapshot.Artist;
             SetActionEnabled(true);
             return;
         }
@@ -158,17 +158,17 @@ public partial class NowPlayingView : UserControl
         StateText.Text = "等待媒体会话";
         StateDot.Fill = (System.Windows.Media.Brush)FindResource("B.StatusIdle");
         TitleText.Text = "尚未读取到正在播放的歌曲";
-        ArtistText.Text = AppServices.Settings.OnlyRecordQQMusic
-            ? "当前只记录 QQ 音乐，请在 QQ 音乐中播放；也可以手动记录"
-            : "打开 QQ 音乐并开始播放，或使用右侧按钮手动记录";
+        ArtistText.Text = AppServices.Settings.OnlyRecordMusicApps
+            ? $"当前只记录 {SourceApps.RecordableNames}，请在其中播放；也可以手动记录"
+            : $"在 {SourceApps.RecordableNames} 里播放，或使用右侧按钮手动记录";
     }
 
-    /// <summary>卡片上的自动记录状态标签，顺带提示"仅记录 QQ 音乐"。</summary>
+    /// <summary>卡片上的自动记录状态标签，顺带提示"仅记录音乐软件"。</summary>
     private void SetAutoLabel()
     {
-        var qqOnly = AppServices.Settings.OnlyRecordQQMusic;
+        var musicOnly = AppServices.Settings.OnlyRecordMusicApps;
         AutoText.Text = !_autoRecording ? "自动记录已暂停"
-            : qqOnly ? "仅记录 QQ 音乐"
+            : musicOnly ? "仅记录音乐软件"
             : "自动记录中";
         AutoText.Foreground = (System.Windows.Media.Brush)FindResource(
             _autoRecording ? "B.AccentSoftText" : "B.Warning");

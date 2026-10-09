@@ -39,7 +39,7 @@ public sealed record MediaSnapshot(
     };
 }
 
-/// <summary>一个媒体会话的概要信息（用于"只记录 QQ 音乐"的筛选与排查）。</summary>
+/// <summary>一个媒体会话的概要信息（用于"只记录音乐软件"的筛选与排查）。</summary>
 public sealed record MediaSessionSummary(
     string SourceApp,
     string Title,
@@ -48,9 +48,10 @@ public sealed record MediaSessionSummary(
     bool IsCurrent)
 {
     public string FriendlySource => SourceApps.FriendlyName(SourceApp);
-    public bool IsQQMusic => SourceApps.IsQQMusic(SourceApp);
+    public MusicApp? App => SourceApps.Match(SourceApp);
+    public bool IsRecordable => App is not null;
     public string Display => string.IsNullOrWhiteSpace(Artist) ? Title : $"{Title} - {Artist}";
-    public string KindLabel => IsQQMusic ? "QQ 音乐" : "其它应用";
+    public string KindLabel => App?.Name ?? "其它应用";
     public string StateLabel => State switch
     {
         PlaybackState.Playing => "播放中",

@@ -51,13 +51,13 @@ public partial class SettingsView : UserControl
 
         AutoRecordSwitch.IsChecked = settings.AutoRecord;
         CoverSwitch.IsChecked = settings.CaptureCoverArt;
-        QqOnlySwitch.IsChecked = settings.OnlyRecordQQMusic;
+        AllowedSwitch.IsChecked = settings.OnlyRecordMusicApps;
         ConfirmSwitch.IsChecked = settings.ConfirmBeforeDelete;
         TraySwitch.IsChecked = settings.MinimizeToTray;
         StartMinSwitch.IsChecked = settings.StartMinimized;
         StartupSwitch.IsChecked = StartupManager.IsEnabled();
 
-        UpdateQqOnlyHint();
+        UpdateMusicOnlyHint();
 
         ThresholdBox.SelectedValue = settings.RecordThresholdSeconds;
         if (ThresholdBox.SelectedIndex < 0) ThresholdBox.SelectedIndex = 3;
@@ -77,10 +77,10 @@ public partial class SettingsView : UserControl
         _ = LoadSessionsAsync();
     }
 
-    private void UpdateQqOnlyHint()
+    private void UpdateMusicOnlyHint()
     {
-        QqOnlyHint.Text = QqOnlySwitch.IsChecked == true
-            ? "已开启：只记录来自 QQ 音乐的媒体会话；浏览器、B 站等其它应用一律跳过。"
+        MusicOnlyHint.Text = AllowedSwitch.IsChecked == true
+            ? $"已开启：只记录来自 {Core.SourceApps.RecordableNames}的媒体会话；浏览器、B 站等其它应用一律跳过。"
             : "已关闭：任何应用的媒体会话都会被记录（浏览器、B 站等也会记进来）。";
     }
 
@@ -134,7 +134,7 @@ public partial class SettingsView : UserControl
 
         settings.AutoRecord = AutoRecordSwitch.IsChecked == true;
         settings.CaptureCoverArt = CoverSwitch.IsChecked == true;
-        settings.OnlyRecordQQMusic = QqOnlySwitch.IsChecked == true;
+        settings.OnlyRecordMusicApps = AllowedSwitch.IsChecked == true;
         settings.ConfirmBeforeDelete = ConfirmSwitch.IsChecked == true;
         settings.MinimizeToTray = TraySwitch.IsChecked == true;
         settings.StartMinimized = StartMinSwitch.IsChecked == true;
@@ -142,7 +142,7 @@ public partial class SettingsView : UserControl
         if (PollBox.SelectedValue is int poll) settings.PollSeconds = poll;
         if (PageSizeBox.SelectedValue is int pageSize) settings.PageSize = pageSize;
 
-        UpdateQqOnlyHint();
+        UpdateMusicOnlyHint();
         AppServices.Tracker.SetAutoRecording(settings.AutoRecord);
         AppServices.SaveSettings();
         DbInfoText.Text = BuildDatabaseInfo();

@@ -47,11 +47,11 @@
 
                     <Grid Margin="0,8,0,0">
                         <StackPanel>
-                            <TextBlock Text="只记录 QQ 音乐" FontSize="13" FontWeight="SemiBold" />
-                            <TextBlock x:Name="QqOnlyHint" Style="{StaticResource T.Faint}" Margin="0,3,0,0" TextWrapping="Wrap"
-                                       Text="开启后只记录来自 QQ 音乐的媒体会话；浏览器、B 站等其它应用一律跳过。" />
+                            <TextBlock Text="只记录音乐软件" FontSize="13" FontWeight="SemiBold" />
+                            <TextBlock x:Name="MusicOnlyHint" Style="{StaticResource T.Faint}" Margin="0,3,0,0" TextWrapping="Wrap"
+                                       Text="开启后只记录来自 QQ 音乐 / 网易云音乐的媒体会话；浏览器、B 站等其它应用一律跳过。" />
                         </StackPanel>
-                        <CheckBox x:Name="QqOnlySwitch" Style="{StaticResource Switch}" HorizontalAlignment="Right"
+                        <CheckBox x:Name="AllowedSwitch" Style="{StaticResource Switch}" HorizontalAlignment="Right"
                                   VerticalAlignment="Center" Click="Setting_Changed" />
                     </Grid>
 
